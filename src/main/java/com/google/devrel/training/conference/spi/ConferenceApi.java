@@ -205,4 +205,11 @@ public class ConferenceApi {
 		Query<Conference> query = ofy().load().type(Conference.class).order("name");
 		return query.list();
 	}
+	
+	@ApiMethod(name = "getConferencesCreated", path = "getConferencesCreated", httpMethod = HttpMethod.POST)
+	public List<Conference> getConferencesCreated(final User user) {
+		Key<Profile> profile = Key.create(Profile.class, user.getUserId());
+		Query<Conference> query = ofy().load().type(Conference.class).ancestor(profile).order("name");
+		return query.list();
+	}
 }
