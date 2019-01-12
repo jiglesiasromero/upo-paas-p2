@@ -205,11 +205,18 @@ public class ConferenceApi {
 		Query<Conference> query = ofy().load().type(Conference.class).order("name");
 		return query.list();
 	}
-	
+
 	@ApiMethod(name = "getConferencesCreated", path = "getConferencesCreated", httpMethod = HttpMethod.POST)
 	public List<Conference> getConferencesCreated(final User user) {
 		Key<Profile> profile = Key.create(Profile.class, user.getUserId());
 		Query<Conference> query = ofy().load().type(Conference.class).ancestor(profile).order("name");
+		return query.list();
+	}
+
+	public List<Conference> filterPlayground() {
+		Query<Conference> query = ofy().load().type(Conference.class);
+		// Filtrado de conferencia con city = LONDON
+		query = query.filter("city =", "LONDON");
 		return query.list();
 	}
 }
