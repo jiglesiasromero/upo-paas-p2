@@ -15,6 +15,7 @@ import com.google.devrel.training.conference.Constants;
 import com.google.devrel.training.conference.domain.Conference;
 import com.google.devrel.training.conference.domain.Profile;
 import com.google.devrel.training.conference.form.ConferenceForm;
+import com.google.devrel.training.conference.form.ConferenceQueryForm;
 import com.google.devrel.training.conference.form.ProfileForm;
 import com.google.devrel.training.conference.form.ProfileForm.TeeShirtSize;
 import com.googlecode.objectify.Key;
@@ -201,8 +202,8 @@ public class ConferenceApi {
 	}
 
 	@ApiMethod(name = "queryConferences", path = "queryConferences", httpMethod = HttpMethod.POST)
-	public List<Conference> queryConferences() {
-		Query<Conference> query = ofy().load().type(Conference.class).order("name");
+	public List<Conference> queryConferences(ConferenceQueryForm conferenceQueryForm) {
+		Query<Conference> query = conferenceQueryForm.getQuery();
 		return query.list();
 	}
 
@@ -216,7 +217,14 @@ public class ConferenceApi {
 	public List<Conference> filterPlayground() {
 		Query<Conference> query = ofy().load().type(Conference.class);
 		// Filtrado de conferencia con city = LONDON
-		query = query.filter("city =", "LONDON");
+		//query = query.filter("city =", "LONDON");
+		//query = query.filter("topics =", "Medical Innovation");
+		//query = query.filter("month =",6);
+		//query = query.filter("maxAttendees >", 10).order("maxAttendees");
+		query = query.filter("city =", "Tokyo").filter("seatsAvailable <", 10).filter("seatsAvailable >", 0)
+				.order("seatsAvailable")
+				.order("name")
+				.order("month");
 		return query.list();
 	}
 }
